@@ -4,7 +4,7 @@
  *
  *
  * @link
- * @since             1.0.0
+ * @since             1.0.1
  * @package           jetimob_leads_api
  *
  * @wordpress-plugin
@@ -12,7 +12,7 @@
  * Plugin URI:        http://opaweb.net
  * Description:       Envia dados do Contact Form 7 para a API de Leads Jetimob
  * Version:           1.0.0
- * Author:            QUERY SOLUTIONS
+ * Author:            Opaweb
  * Author URI: 		  https://opaweb.net
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt

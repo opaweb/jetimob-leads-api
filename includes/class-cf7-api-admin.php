@@ -93,6 +93,7 @@ class QS_CF7_api_admin{
         $properties["wpcf7_api_data_map"] = isset($properties["wpcf7_api_data_map"]) ? $properties["wpcf7_api_data_map"] : array();
 		$properties["template"]           = isset($properties["template"]) ? $properties["template"]                     : '';
 		$properties["json_template"]      = isset($properties["json_template"]) ? $properties["json_template"]                     : '';
+		$properties["authorization_key"]   = isset( $properties["authorization_key"] ) ? $properties["authorization_key"] 	 : '';
 
         return $properties;
     }
@@ -149,11 +150,13 @@ class QS_CF7_api_admin{
         $wpcf7_api_data_map            = $post->prop( 'wpcf7_api_data_map' );
 		$wpcf7_api_data_template 	   = $post->prop( 'template' );
 		$wpcf7_api_json_data_template  = $post->prop( 'json_template' );
+		$wpcf7_api_authorization_key   = $post->prop(' authorization_key' );
         $mail_tags                     = $this->get_mail_tags( $post );
 
         $wpcf7_api_data["base_url"]     = isset( $wpcf7_api_data["base_url"] ) ? $wpcf7_api_data["base_url"]         : '';
         $wpcf7_api_data["send_to_api"]  = isset( $wpcf7_api_data["send_to_api"] ) ? $wpcf7_api_data["send_to_api"]   : '';
 		$wpcf7_api_data["input_type"]   = isset( $wpcf7_api_data["input_type"] ) ? $wpcf7_api_data["input_type"] 	 : 'params';
+		$wpcf7_api_data["authorization_key"]   = isset( $wpcf7_api_data["authorization_key"] ) ? $wpcf7_api_data["authorization_key"] 	 : '';
         $wpcf7_api_data["method"]       = isset( $wpcf7_api_data["method"] ) ? $wpcf7_api_data["method"]             : 'GET';
         $wpcf7_api_data["debug_log"]    = true;
 
@@ -202,6 +205,13 @@ class QS_CF7_api_admin{
             </div>
 
 			<hr>
+			
+			<div class="cf7_row">
+                <label for="wpcf7-sf-authorization-key">
+                    <?php _e( 'Chave de Autorização (Authorization-key)' , $this->textdomain );?>
+                    <input type="text" id="wpcf7-sf-authorization_key" name="wpcf7-sf[authorization_key]" class="large-text" value="<?php echo $wpcf7_api_data["authorization_key"];?>" />
+                </label>
+            </div>
 
 			<div class="cf7_row">
 				<label for="wpcf7-sf-input_type">
@@ -362,6 +372,7 @@ class QS_CF7_api_admin{
         $qs_cf7_data_map           = $WPCF7_ContactForm->prop( 'wpcf7_api_data_map' );
 		$qs_cf7_data_template      = $WPCF7_ContactForm->prop( 'template' );
 		$qs_cf7_data_json_template = $WPCF7_ContactForm->prop( 'json_template' );
+		$qs_cf7_data_authorization_key = $WPCF7_ContactForm->prop( 'authorization_key' );
 		$qs_cf7_data['debug_log']  = true; //always save last call results for debugging
 
 
@@ -527,6 +538,8 @@ class QS_CF7_api_admin{
 
 				$args['headers']['Content-Type'] = 'application/json';
 
+				$args['headers']['Authorization-key'] = $qs_cf7_data_authorization_key;
+
 				$json = $this->parse_json( $lead );
 
 				if( is_wp_error( $json ) ){
@@ -579,6 +592,8 @@ class QS_CF7_api_admin{
 			}elseif( $record_type == "json" ){
 
 				$args['headers']['Content-Type'] = 'application/json';
+
+				$args['headers']['Authorization-key'] = $qs_cf7_data_authorization_key;
 
 				$json = $this->parse_json( $lead );
 
