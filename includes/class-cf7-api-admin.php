@@ -93,7 +93,6 @@ class QS_CF7_api_admin{
         $properties["wpcf7_api_data_map"] = isset($properties["wpcf7_api_data_map"]) ? $properties["wpcf7_api_data_map"] : array();
 		$properties["template"]           = isset($properties["template"]) ? $properties["template"]                     : '';
 		$properties["json_template"]      = isset($properties["json_template"]) ? $properties["json_template"]                     : '';
-		$properties["authorization_key"]   = isset( $properties["authorization_key"] ) ? $properties["authorization_key"] 	 : '';
 
         return $properties;
     }
@@ -150,7 +149,7 @@ class QS_CF7_api_admin{
         $wpcf7_api_data_map            = $post->prop( 'wpcf7_api_data_map' );
 		$wpcf7_api_data_template 	   = $post->prop( 'template' );
 		$wpcf7_api_json_data_template  = $post->prop( 'json_template' );
-		$wpcf7_api_authorization_key   = $post->prop(' authorization_key' );
+
         $mail_tags                     = $this->get_mail_tags( $post );
 
         $wpcf7_api_data["base_url"]     = isset( $wpcf7_api_data["base_url"] ) ? $wpcf7_api_data["base_url"]         : '';
@@ -164,7 +163,6 @@ class QS_CF7_api_admin{
         $debug_result                  = get_post_meta( $post->id() , 'qs_cf7_api_debug_result' , true );
         $debug_params                  = get_post_meta( $post->id() , 'qs_cf7_api_debug_params' , true );
 
-		$error_logs 				   = get_post_meta( $post->id() , 'api_errors' , true );
 		$xml_placeholder = __('*** THIS IS AN EXAMPLE ** USE YOUR XML ACCORDING TO YOUR API DOCUMENTATION **
 			<update>
 				<user clientid="" username="user_name" password="mypassword" />
@@ -327,8 +325,7 @@ class QS_CF7_api_admin{
 						<textarea rows="10"><?php print_r( $debug_params );?></textarea>
 						<h4><?php _e( 'Retorno do servidor' , $this->textdomain );?>:</h4>
 						<textarea rows="10"><?php print_r( $debug_result );?></textarea>
-						<h4><?php _e( 'Erros' , $this->textdomain );?>:</h4>
-						<textarea rows="10"><?php print_r( $error_logs );?></textarea>
+						<?php var_dump($post->prop( '_flamingo' ));?>
 					</div>
 				</div>
 			</div>
@@ -372,7 +369,6 @@ class QS_CF7_api_admin{
         $qs_cf7_data_map           = $WPCF7_ContactForm->prop( 'wpcf7_api_data_map' );
 		$qs_cf7_data_template      = $WPCF7_ContactForm->prop( 'template' );
 		$qs_cf7_data_json_template = $WPCF7_ContactForm->prop( 'json_template' );
-		$qs_cf7_data_authorization_key = $WPCF7_ContactForm->prop( 'authorization_key' );
 		$qs_cf7_data['debug_log']  = true; //always save last call results for debugging
 
 
@@ -510,7 +506,7 @@ class QS_CF7_api_admin{
      * @return [type]          [description]
      */
 
-	private function send_lead( $record , $debug = false , $method = 'GET' , $record_type = 'params' ){
+	private function send_lead( $record , $debug = false , $method = 'POST' , $record_type = 'params' ){
         global $wp_version;
 
         $lead = $record["fields"];
@@ -518,7 +514,7 @@ class QS_CF7_api_admin{
 
 		if( $method == 'GET' && ( $record_type == 'params' || $record_type == 'json' ) ){
 			$args = array(
-				'timeout'     => 5,
+				'timeout'     => 10,
 				'redirection' => 5,
 				'httpversion' => '1.0',
 				'user-agent'  => 'WordPress/' . $wp_version . '; ' . home_url(),
@@ -538,7 +534,7 @@ class QS_CF7_api_admin{
 
 				$args['headers']['Content-Type'] = 'application/json';
 
-				$args['headers']['Authorization-key'] = $qs_cf7_data_authorization_key;
+				$args['headers']['Authorization-key'] = $qs_cf7_data["authorization_key"];
 
 				$json = $this->parse_json( $lead );
 
@@ -562,7 +558,7 @@ class QS_CF7_api_admin{
 
 		}else{
 			$args = array(
-				'timeout'     => 5,
+				'timeout'     => 10,
 				'redirection' => 5,
 				'httpversion' => '1.0',
 				'user-agent'  => 'WordPress/' . $wp_version . '; ' . home_url(),
@@ -593,7 +589,7 @@ class QS_CF7_api_admin{
 
 				$args['headers']['Content-Type'] = 'application/json';
 
-				$args['headers']['Authorization-key'] = $qs_cf7_data_authorization_key;
+				$args['headers']['Authorization-key'] = $qs_cf7_data["authorization_key"];
 
 				$json = $this->parse_json( $lead );
 
@@ -611,14 +607,21 @@ class QS_CF7_api_admin{
 
 			$result = wp_remote_post( $url , $args );
 
+			update_post_meta( $this->post->id() , '_api_debug_url' , $record["url"] );
+            update_post_meta( $this->post->id() , '_api_debug_params' , $lead );
+            update_post_meta( $this->post->id() , '_api_debug_result' , $result );
+
+
 
 		}
 
-        if( $debug ){
+        //if( $debug ){
             update_post_meta( $this->post->id() , 'qs_cf7_api_debug_url' , $record["url"] );
             update_post_meta( $this->post->id() , 'qs_cf7_api_debug_params' , $lead );
             update_post_meta( $this->post->id() , 'qs_cf7_api_debug_result' , $result );
-        }
+        //}
+
+
 
         return do_action('after_qs_cf7_api_send_lead' , $result , $record );
 
