@@ -31,6 +31,11 @@ Verifique se todos os campos da configuração foram preenchidos e estão corret
 
 == Changelog ==
 
+= 1.0.4 =
+* Definição de requisitos mínimos de PHP para utilização do plugin. Se não atendidos, a instalação falha. (PHP 7.2.24 e WP 4.8).
+* Inclusão de método de atualização direta via GitHub
+
+
 = 1.0.3 =
 * Correção na geração do header da requisição, que poderia ocasionar em alguns cenários a falha na autenticação com a API do Jetimob.
 

@@ -4,22 +4,41 @@
  *
  *
  * @link
- * @since             1.0.3
+ * @since             1.0
  * @package           jetimob_leads_api
  *
  * @wordpress-plugin
  * Plugin Name:       API de Leads Jetimob
  * Plugin URI:        http://opaweb.net
  * Description:       Envia dados do Contact Form 7 para a API de Leads Jetimob
- * Version:           1.0.3
+ * Version:           1.0.4
  * Author:            Opaweb
  * Author URI: 		  https://opaweb.net
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       jetimob-leads-api
  * Domain Path:       /languages
+ * GitHub Plugin URI: opaweb/jetimob-leads-api
  */
 // If this file is called directly, abort.
+ /**
+  * Plugin Activation hook function to check for Minimum PHP and WordPress versions
+  * @param string $wp Minimum version of WordPress required for this plugin
+  * @param string $php Minimum version of PHP required for this plugin
+  */
+ function activate( $wp = '4.8', $php = '7.2.24' ) {
+    global $wp_version;
+    if ( version_compare( PHP_VERSION, $php, '<' ) )
+        $flag = 'PHP';
+    elseif
+        ( version_compare( $wp_version, $wp, '<' ) )
+        $flag = 'WordPress';
+    else
+        return;
+    $version = 'PHP' == $flag ? $php : $wp;
+    deactivate_plugins( basename( __FILE__ ) );
+    wp_die('<p>O plugin <strong>API de Leads Jetimob</strong> requer '.$flag.'  versão '.$version.' ou superior.</p>','Plugin Activation Error',  array( 'response'=>200, 'back_link'=>TRUE ) );
+}
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
