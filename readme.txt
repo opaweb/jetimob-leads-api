@@ -47,3 +47,5 @@ Verifique se todos os campos da configuração foram preenchidos e estão corret
 
 = 1.0.0 =
 * Release inicial.
+
+~Current Version:1.0.4~
