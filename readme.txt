@@ -31,6 +31,9 @@ Verifique se todos os campos da configuração foram preenchidos e estão corret
 
 == Changelog ==
 
+= 1.0.5 =
+* Ajuste no mecanismo de atualização.
+
 = 1.0.4 =
 * Definição de requisitos mínimos de PHP para utilização do plugin. Se não atendidos, a instalação falha. (PHP 7.2.24 e WP 4.8).
 * Inclusão de método de atualização direta via GitHub
@@ -48,4 +51,4 @@ Verifique se todos os campos da configuração foram preenchidos e estão corret
 = 1.0.0 =
 * Release inicial.
 
-~Current Version:1.0.4~
+~Current Version:1.0.5~
