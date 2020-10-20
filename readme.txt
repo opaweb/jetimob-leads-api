@@ -31,6 +31,9 @@ Verifique se todos os campos da configuração foram preenchidos e estão corret
 
 == Changelog ==
 
+= 1.0.6 =
+* Ajuste na integração devido a atualização da API do Jetimob.
+
 = 1.0.5 =
 * Ajuste no mecanismo de atualização.
 

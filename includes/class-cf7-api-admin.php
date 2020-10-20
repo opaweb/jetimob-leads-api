@@ -512,7 +512,7 @@ class QS_CF7_api_admin{
         $lead = $record["fields"];
         $url  = $record["url"];
 
-		if( $method == 'GET' && ( $record_type == 'params' || $record_type == 'json' ) ){
+		if( $method == 'POST' && ( $record_type == 'params' || $record_type == 'json' ) ){
 			$args = array(
 				'timeout'     => 10,
 				'redirection' => 5,
@@ -532,7 +532,7 @@ class QS_CF7_api_admin{
 
 			if( $record_type == "json" ){
 
-				$args['headers']['Content-Type'] = 'application/json';
+				$args['headers']['Content-Type'] = 'multipart/form-data';
 
 				$args['headers']['Authorization-key'] = $qs_cf7_data["authorization_key"];
 
@@ -587,7 +587,7 @@ class QS_CF7_api_admin{
 
 			}elseif( $record_type == "json" ){
 
-				$args['headers']['Content-Type'] = 'application/json';
+				$args['headers']['Content-Type'] = 'multipart/form-data';
 
 				$args['headers']['Authorization-key'] = $qs_cf7_data["authorization_key"];
 
