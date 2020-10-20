@@ -206,7 +206,7 @@ class QS_CF7_api_admin{
 			
 			<div class="cf7_row">
                 <label for="wpcf7-sf-authorization-key">
-                    <?php _e( 'Chave de Autorização (Authorization-key)' , $this->textdomain );?>
+                    <?php _e( 'Chave de Autorização (Authorization-Key)' , $this->textdomain );?>
                     <input type="text" id="wpcf7-sf-authorization_key" name="wpcf7-sf[authorization_key]" class="large-text" value="<?php echo $wpcf7_api_data["authorization_key"];?>" />
                 </label>
             </div>
@@ -534,7 +534,7 @@ class QS_CF7_api_admin{
 
 				$args['headers']['Content-Type'] = 'multipart/form-data';
 
-				$args['headers']['Authorization-key'] = $qs_cf7_data["authorization_key"];
+				$args['headers']['Authorization-Key'] = $qs_cf7_data["authorization_key"];
 
 				$json = $this->parse_json( $lead );
 
@@ -589,7 +589,7 @@ class QS_CF7_api_admin{
 
 				$args['headers']['Content-Type'] = 'multipart/form-data';
 
-				$args['headers']['Authorization-key'] = $qs_cf7_data["authorization_key"];
+				$args['headers']['Authorization-Key'] = $qs_cf7_data["authorization_key"];
 
 				$json = $this->parse_json( $lead );
 
