@@ -512,7 +512,7 @@ class QS_CF7_api_admin{
         $lead = $record["fields"];
         $url  = $record["url"];
 
-		if( $method == 'POST' && ( $record_type == 'params' || $record_type == 'json' ) ){
+		if( $method == 'GET' && ( $record_type == 'params' || $record_type == 'json' ) ){
 			$args = array(
 				'timeout'     => 10,
 				'redirection' => 5,
