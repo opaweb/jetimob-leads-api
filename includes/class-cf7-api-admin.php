@@ -383,6 +383,8 @@ class QS_CF7_api_admin{
             $record = $this->get_record( $submission , $qs_cf7_data_map , $record_type, $template = $qs_cf7_data_template );
 
             $record["url"] = $qs_cf7_data["base_url"];
+			
+			$record["authorization_key"] = $qs_cf7_data["authorization_key"];
 
             if( isset( $record["url"] ) && $record["url"] ){
 
@@ -511,6 +513,8 @@ class QS_CF7_api_admin{
 
         $lead = $record["fields"];
         $url  = $record["url"];
+		
+		$authorization_key = $record["authorization_key"];
 
 		if( $method == 'GET' && ( $record_type == 'params' || $record_type == 'json' ) ){
 			$args = array(
@@ -532,9 +536,10 @@ class QS_CF7_api_admin{
 
 			if( $record_type == "json" ){
 
-				$args['headers']['Content-Type'] = 'multipart/form-data';
+				//$args['headers']['Content-Type'] = 'multipart/form-data';
+				$args['headers']['Content-Type'] = 'application/json';
 
-				$args['headers']['Authorization-Key'] = $qs_cf7_data["authorization_key"];
+				$args['headers']['Authorization-Key'] = $authorization_key;
 
 				$json = $this->parse_json( $lead );
 
@@ -587,9 +592,10 @@ class QS_CF7_api_admin{
 
 			}elseif( $record_type == "json" ){
 
-				$args['headers']['Content-Type'] = 'multipart/form-data';
+				//$args['headers']['Content-Type'] = 'multipart/form-data';
+				$args['headers']['Content-Type'] = 'application/json';
 
-				$args['headers']['Authorization-Key'] = $qs_cf7_data["authorization_key"];
+				$args['headers']['Authorization-Key'] = $authorization_key;
 
 				$json = $this->parse_json( $lead );
 
@@ -617,7 +623,7 @@ class QS_CF7_api_admin{
 
         //if( $debug ){
             update_post_meta( $this->post->id() , 'qs_cf7_api_debug_url' , $record["url"] );
-            update_post_meta( $this->post->id() , 'qs_cf7_api_debug_params' , $lead );
+            update_post_meta( $this->post->id() , 'qs_cf7_api_debug_params' , $args ); //$lead
             update_post_meta( $this->post->id() , 'qs_cf7_api_debug_result' , $result );
         //}
 
