@@ -33,11 +33,11 @@ class QS_CF7_api_admin{
 
     public function __construct(){
 
-		$this->textdomain = 'qs-cf7-api';
+	$this->textdomain = 'qs-cf7-api';
 
         $this->admin_notices = new QS_Admin_notices();
 
-		$this->api_errors = array();
+	$this->api_errors = array();
 
         $this->register_hooks();
 
@@ -91,8 +91,8 @@ class QS_CF7_api_admin{
         //add mail tags to allowed properties
         $properties["wpcf7_api_data"]     = isset($properties["wpcf7_api_data"]) ? $properties["wpcf7_api_data"]         : array();
         $properties["wpcf7_api_data_map"] = isset($properties["wpcf7_api_data_map"]) ? $properties["wpcf7_api_data_map"] : array();
-		$properties["template"]           = isset($properties["template"]) ? $properties["template"]                     : '';
-		$properties["json_template"]      = isset($properties["json_template"]) ? $properties["json_template"]                     : '';
+	$properties["template"]           = isset($properties["template"]) ? $properties["template"]                     : '';
+	$properties["json_template"]      = isset($properties["json_template"]) ? $properties["json_template"]                     : '';
 
         return $properties;
     }
@@ -147,15 +147,15 @@ class QS_CF7_api_admin{
 
         $wpcf7_api_data                = $post->prop( 'wpcf7_api_data' );
         $wpcf7_api_data_map            = $post->prop( 'wpcf7_api_data_map' );
-		$wpcf7_api_data_template 	   = $post->prop( 'template' );
-		$wpcf7_api_json_data_template  = $post->prop( 'json_template' );
+	$wpcf7_api_data_template 	   = $post->prop( 'template' );
+	$wpcf7_api_json_data_template  = $post->prop( 'json_template' );
 
         $mail_tags                     = $this->get_mail_tags( $post );
 
         $wpcf7_api_data["base_url"]     = isset( $wpcf7_api_data["base_url"] ) ? $wpcf7_api_data["base_url"]         : '';
         $wpcf7_api_data["send_to_api"]  = isset( $wpcf7_api_data["send_to_api"] ) ? $wpcf7_api_data["send_to_api"]   : '';
-		$wpcf7_api_data["input_type"]   = isset( $wpcf7_api_data["input_type"] ) ? $wpcf7_api_data["input_type"] 	 : 'params';
-		$wpcf7_api_data["authorization_key"]   = isset( $wpcf7_api_data["authorization_key"] ) ? $wpcf7_api_data["authorization_key"] 	 : '';
+	$wpcf7_api_data["input_type"]   = isset( $wpcf7_api_data["input_type"] ) ? $wpcf7_api_data["input_type"] 	 : 'params';
+	$wpcf7_api_data["authorization_key"]   = isset( $wpcf7_api_data["authorization_key"] ) ? $wpcf7_api_data["authorization_key"] 	 : '';
         $wpcf7_api_data["method"]       = isset( $wpcf7_api_data["method"] ) ? $wpcf7_api_data["method"]             : 'GET';
         $wpcf7_api_data["debug_log"]    = true;
 
@@ -347,6 +347,14 @@ class QS_CF7_api_admin{
 		$properties['wpcf7_api_data_map']    = isset( $_POST["qs_wpcf7_api_map"] ) ? $_POST["qs_wpcf7_api_map"] : '';
 		$properties['template'] 		 	 = isset( $_POST["template"] ) ? $_POST["template"] : '';
 		$properties['json_template'] 		 = isset( $_POST["json_template"] ) ? $_POST["json_template"] : '';
+	    
+	    //extract custom placeholders    
+	    $record_type = isset( $qs_cf7_data['input_type'] ) ? $qs_cf7_data['input_type'] : 'params';
+	    if( $record_type == 'json' || $record_type == 'xml' ){
+	      $template = $record_type == 'json' ? $properties['json_template'] : $properties['template'];
+	      preg_match_all("/\[(\w+(-\d+)?)\]/", $template, $matches, PREG_PATTERN_ORDER); 
+	      $properties['wpcf7_api_data_map'] = array_merge(array_fill_keys($matches[1], ''), $properties['wpcf7_api_data_map']);
+	    }
 
 		$contact_form->set_properties( $properties );
 
@@ -359,17 +367,17 @@ class QS_CF7_api_admin{
      */
     public function qs_cf7_send_data_to_api( $WPCF7_ContactForm ) {
 
-		$this->clear_error_log( $WPCF7_ContactForm->id() );
+	$this->clear_error_log( $WPCF7_ContactForm->id() );
 
         $submission = WPCF7_Submission::get_instance();
 
         $url                       = $submission->get_meta( 'url' );
-		$this->post 		       = $WPCF7_ContactForm;
+	$this->post 		       = $WPCF7_ContactForm;
         $qs_cf7_data               = $WPCF7_ContactForm->prop( 'wpcf7_api_data' );
         $qs_cf7_data_map           = $WPCF7_ContactForm->prop( 'wpcf7_api_data_map' );
-		$qs_cf7_data_template      = $WPCF7_ContactForm->prop( 'template' );
-		$qs_cf7_data_json_template = $WPCF7_ContactForm->prop( 'json_template' );
-		$qs_cf7_data['debug_log']  = true; //always save last call results for debugging
+	$qs_cf7_data_template      = $WPCF7_ContactForm->prop( 'template' );
+	$qs_cf7_data_json_template = $WPCF7_ContactForm->prop( 'json_template' );
+	$qs_cf7_data['debug_log']  = true; //always save last call results for debugging
 
 
         /* check if the form is marked to be sent via API */
@@ -377,9 +385,9 @@ class QS_CF7_api_admin{
 
             $record_type = isset( $qs_cf7_data['input_type'] ) ? $qs_cf7_data['input_type'] : 'params';
 
-			if( $record_type == 'json' ){
-				$qs_cf7_data_template = $qs_cf7_data_json_template;
-			}
+	    if( $record_type == 'json' ){
+		$qs_cf7_data_template = $qs_cf7_data_json_template;
+            }
             $record = $this->get_record( $submission , $qs_cf7_data_map , $record_type, $template = $qs_cf7_data_template );
 
             $record["url"] = $qs_cf7_data["base_url"];
@@ -392,11 +400,11 @@ class QS_CF7_api_admin{
 
                 $response = $this->send_lead( $record , $qs_cf7_data['debug_log'] , $qs_cf7_data['method'] , $record_type );
 
-				if( is_wp_error( $response ) ){
-					$this->log_error( $response , $WPCF7_ContactForm->id() );
-				}else{
-					do_action( 'qs_cf7_api_after_sent_to_api' , $record , $response );
-				}
+		if( is_wp_error( $response ) ){
+			$this->log_error( $response , $WPCF7_ContactForm->id() );
+		}else{
+			do_action( 'qs_cf7_api_after_sent_to_api' , $record , $response );
+		}
             }
         }
 
@@ -508,7 +516,7 @@ class QS_CF7_api_admin{
      * @return [type]          [description]
      */
 
-	private function send_lead( $record , $debug = false , $method = 'POST' , $record_type = 'params' ){
+	private function send_lead( $record , $debug = false , $method = 'POST' , $record_type = 'params', $basic_auth = null, $bearer_auth = null ){
         global $wp_version;
 
         $lead = $record["fields"];
@@ -541,7 +549,7 @@ class QS_CF7_api_admin{
 
 				$args['headers']['Authorization-Key'] = $authorization_key;
 
-				$json = $this->parse_json( $lead );
+				$json = $this->parse_json( stripslashes ( $lead ) );
 
 				if( is_wp_error( $json ) ){
 					return $json;
@@ -577,6 +585,14 @@ class QS_CF7_api_admin{
 				'stream'      => false,
 				'filename'    => null
 			);
+			
+			if ( isset($basic_auth) && $basic_auth !== '' ) {
+			    $args['headers']['Authorization'] = 'Basic ' . base64_encode( $basic_auth );
+		        }
+
+		        if ( isset($bearer_auth) && $bearer_auth !== '' ) {
+			    $args['headers']['Authorization'] = 'Bearer ' . $bearer_auth;
+		        }
 
 			if( $record_type == "xml" ){
 
@@ -597,7 +613,7 @@ class QS_CF7_api_admin{
 
 				$args['headers']['Authorization-Key'] = $authorization_key;
 
-				$json = $this->parse_json( $lead );
+				$json = $this->parse_json( stripslashes( $lead ) );
 
 				if( is_wp_error( $json ) ){
 					return $json;
@@ -614,8 +630,8 @@ class QS_CF7_api_admin{
 			$result = wp_remote_post( $url , $args );
 
 			update_post_meta( $this->post->id() , '_api_debug_url' , $record["url"] );
-            update_post_meta( $this->post->id() , '_api_debug_params' , $lead );
-            update_post_meta( $this->post->id() , '_api_debug_result' , $result );
+            		update_post_meta( $this->post->id() , '_api_debug_params' , $lead );
+            		update_post_meta( $this->post->id() , '_api_debug_result' , $result );
 
 
 
