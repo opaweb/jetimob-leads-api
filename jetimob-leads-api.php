@@ -11,7 +11,7 @@
  * Plugin Name:       API de Leads Jetimob
  * Plugin URI:        http://opaweb.net
  * Description:       Envia dados do Contact Form 7 para a API de Leads Jetimob
- * Version:           1.0.6
+ * Version:           1.0.7
  * Author:            Opaweb
  * Author URI: 		  https://opaweb.net
  * License:           GPL-2.0+
@@ -25,7 +25,7 @@
   * @param string $wp Minimum version of WordPress required for this plugin
   * @param string $php Minimum version of PHP required for this plugin
   */
- function activate( $wp = '4.8', $php = '7.2.24' ) {
+ function jetimob_leads_activate( $wp = '4.8', $php = '7.2.24' ) {
     global $wp_version;
     if ( version_compare( PHP_VERSION, $php, '<' ) )
         $flag = 'PHP';
